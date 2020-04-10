@@ -82,7 +82,7 @@ int addition_matrix(int** matrix_a, int** matrix_b, int** matrix_sum,
 	int row, int col) {
 	for (int i = 0; i < row; i++) {
 		for (int j = 0; j < col; j++) {
-			matrix_sum[i][j] = matrix_a[i][j] + matrix_b[i][j];
+			matrix_sum[i][j] = matrix_a[i][j] + matrix_b[i][j]; //sum행렬에 A+B값을 저장
 		}
 	}
 	return matrix_sum;
@@ -93,7 +93,7 @@ int subtraction_matrix(int** matrix_a, int** matrix_b, int** matrix_sub,
 	int row, int col) {
 	for (int i = 0; i < row; i++) {
 		for (int j = 0; j < col; j++) {
-			matrix_sub[i][j] = matrix_a[i][j] - matrix_b[i][j];
+			matrix_sub[i][j] = matrix_a[i][j] - matrix_b[i][j]; //sub행렬에 A-B값을 저장
 		}
 	}
 	return matrix_sub;
@@ -109,7 +109,7 @@ int multiply_matrix(int** matrix_a, int** matrix_t, int** matrix_axt,
 	}
 
 	int sum;
-	if (row <= col) {
+	if (row <= col) { //입력받은 행이 열보다 작거나 같을 때
 		for (int i = 0; i < row; i++) { //AxT행렬의 행 증가, A행렬의 행 증가
 			for (int j = 0; j < row; j++) { //AxT행렬의 열 증가, T행렬의 열 증가
 				sum = 0;
@@ -119,7 +119,7 @@ int multiply_matrix(int** matrix_a, int** matrix_t, int** matrix_axt,
 			}
 		}
 	}
-	else if (row > col) { //입력받은 행이 열보다 클 때
+	else if (row > col) { //입력받은 행이 열보다 클 때(k의 조건을 제외한 나머지는 전부 위 루프와 동일)
 		for (int i = 0; i < row; i++) {
 			for (int j = 0; j < row; j++) {
 				sum = 0;
@@ -146,7 +146,7 @@ int main(void) {
 	printf("[----- [황규현]  [2019038071] -----]\n\n");
 
 	//행렬 생성 & 데이터 입력
-	while (1) {
+	while (1) { //행렬의 크기가 정상적으로 입력될 때까지 반복
 		printf("행렬의 크기 입력(입력 형식: row col): ");
 		scanf("%d %d", &row, &col);
 		if (row > 0 && col > 0)
@@ -158,7 +158,7 @@ int main(void) {
 	srand(time(NULL));
 	
 	/* 행렬 A 생성 */
-	int** A = create_matrix(row, col);
+	int** A = create_matrix(row, col); 
 	A = fill_data(A, row, col);
 
 	/* 행렬 B 생성 */
@@ -173,18 +173,18 @@ int main(void) {
 	print_matrix(B, row, col);
 
 	//A+B
-	int** sum = create_matrix(row, col);
-	sum = addition_matrix(A, B, sum, row, col);
+	int** sum = create_matrix(row, col); //sum행렬 생성
+	sum = addition_matrix(A, B, sum, row, col); //연산
 	printf("\nA+B\n");
-	print_matrix(sum, row, col);
-	free_matrix(sum, row, col);
+	print_matrix(sum, row, col); //출력
+	free_matrix(sum, row, col); //sum행렬의 메모리 해제
 
 	//A-B
-	int** sub = create_matrix(row, col);
-	sub = subtraction_matrix(A, B, sub, row, col);
+	int** sub = create_matrix(row, col); //sub행렬 생성
+	sub = subtraction_matrix(A, B, sub, row, col); //연산
 	printf("A-B\n");
-	print_matrix(sub, row, col);
-	free_matrix(sub, row, col);
+	print_matrix(sub, row, col); //출력
+	free_matrix(sub, row, col); //sub행렬의 메모리 해제
 
 	//make a transpose matrix T!
 	int** T = create_matrix(col, row);
@@ -193,16 +193,16 @@ int main(void) {
 	print_matrix(T, col, row);
 
 	//AxT
-	int** AxT = create_matrix(row, row); //A행렬의 행 x T행렬(전치행렬)의 열
+	int** AxT = create_matrix(row, row); //행렬 생성 기준: A행렬의 행 x T행렬(전치행렬)의 열
 	AxT = multiply_matrix(A, T, AxT, row, col);
 	printf("A X T\n");
 	print_matrix(AxT, row, row);
 
 	//모든 동적 메모리 해제
-	free_matrix(A, row, col);
-	free_matrix(B, row, col);
-	free_matrix(T, row, col);
-	free_matrix(AxT, row, col);
+	free_matrix(A, row, col); //A행렬 메모리 헤제
+	free_matrix(B, row, col); //B행렬 메모리 해제
+	free_matrix(T, row, col); //A의 전치행렬인 T행렬 메모리 해제
+	free_matrix(AxT, row, col); //A와 T의 행렬곱인 AxT행렬 메모리 해제
 
 	return 0;
 }
