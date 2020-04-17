@@ -8,7 +8,7 @@ int main()
 	double doubleType;
 	//각 데이터 타입 별 변수 선언
 
-	printf("[----[---][2019------]----]\n\n");
+	printf("[----[황규현][2019038071]----]\n\n");
 
 	printf("Size of char: %ld byte\n", sizeof(charType));
 	printf("Size of int: %ld byte\n", sizeof(integerType));
