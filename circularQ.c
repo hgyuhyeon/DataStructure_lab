@@ -18,6 +18,7 @@ typedef struct {
 
 
 QueueType *createQueue();
+int freeQueue(QueueType *cQ);
 int isEmpty(QueueType *cQ);
 int isFull(QueueType *cQ);
 void enQueue(QueueType *cQ, element item);
@@ -65,6 +66,7 @@ int main(void)
 			debugQ(cQ); //queue의 상태 출력
 			break;
 		case 'q': case 'Q':
+			freeQueue(cQ);
 			break;
 		default:
 			printf("\n       >>>>>   Concentration!!   <<<<<     \n");
@@ -85,6 +87,12 @@ QueueType *createQueue()
 	cQ->front = 0;
 	cQ->rear = 0; //front와 rear를 각각 0으로 지정
 	return cQ;
+}
+
+int freeQueue(QueueType *cQ)
+{
+	free(cQ);
+	return 1;
 }
 
 element getElement()
