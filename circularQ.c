@@ -116,7 +116,7 @@ int isEmpty(QueueType *cQ)
 /* 큐가 꽉 차있는지 점검 */
 int isFull(QueueType *cQ)
 {
-	if(cQ->front==cQ->rear) front와 rear의 값이 같으면 -> 큐가 비어있으면
+	if(cQ->front==cQ->rear) //front와 rear의 값이 같으면 -> 큐가 비어있으면
 		return 1;
 	else
 		return 0;
