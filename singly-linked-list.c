@@ -62,7 +62,7 @@ int main()
 			headnode = initialize(headnode); //연결리스트 생성
 			break;
 		case 'p': case 'P':
-			printList(headnode); //리스트 
+			printList(headnode); //리스트
 			break;
 		case 'i': case 'I':
 			printf("Your Key = ");
@@ -176,7 +176,7 @@ int insertNode(headNode* h, int key) {
 				free(node); //insertNode내에서 할당된 node는 해제
 				return 0;
 			}
-      /* 해당 노드가 리스트의 두 번째 이후의 항목으로 들어간다면 */
+			/* 해당 노드가 리스트의 두 번째 이후의 항목으로 들어간다면 */
 			prev->link = node; //앞 노드의 링크는 새로 생성한 노드를 가리킴
 			node->link = p; //새로 생성한 노드의 링크는 뒤 노드를 가리킴
 			return 0; //탐색 종료
@@ -282,11 +282,11 @@ int deleteLast(headNode* h) {
 	 */
 
 	if (pprev == NULL) //남은 노드가 2개 미만이라서 pprev까지 사용되지 않았을 때
-    /* 이 경우 포인터들의 상태
-     * p: NULL 가리킴
-     * prev: 삭제해야 할 첫 번째이자 마지막 노드 가리킴
-     * pprev: NULL 가리킴
-     */
+	/* 이 경우 포인터들의 상태
+	 * p: NULL 가리킴
+	 * prev: 삭제해야 할 첫 번째이자 마지막 노드 가리킴
+	 * pprev: NULL 가리킴
+	 */
 		h->first = NULL; //listhead가 NULL 가리키게 하고(리스트를 비워주고)
 	else //남은 노드가 2개 이상일 때
 		pprev->link = NULL; //pprev->link가 NULL 가리키게 하고(마지막 노드로 만들고)
@@ -299,7 +299,25 @@ int deleteLast(headNode* h) {
  * 리스트의 링크를 역순으로 재 배치
  */
 int invertList(headNode* h) {
-  //여기 왜 비어있지?
+	listNode* p = h->first, * prev = NULL, * temp = NULL;
+	/* p: 리스트를 search하는 포인터
+	 * prev: p가 가리키는 노드의 이전 노드
+	 * temp: 노드의 순서를 바꿀 때 매개하는 포인터 */
+	if (p == NULL) { //리스트가 비어있으면
+		printf("There isn't exist any list.\n"); //리스트가 없다고 출력하고
+		return -1; //종료
+	}
+
+	while (p != NULL) { //p가 리스트 끝까지 가는 동안
+		prev = temp; //temp에 있던 값을 prev로 옮김 (prev의 한 칸 전진)
+		temp = p; //p에 있던 값을 temp로 옮김(temp의 한 칸 전진)
+		p = p->link; //p에 있던 값을 p->link로 옮김(p의 한 칸 전진)
+		temp->link = prev;
+		/* temp->link는 prev노드를 가리킴(앞 노드<-중간 노드->뒤 노드)
+		 * prev = 앞 노드, temp = 중간 노드, p = 뒤 노드의 역할을 함 */
+	}
+	h->first = temp;
+	//listhead가 재배치 전 마지막 노드를 가리킴 -> 재배치 후 첫 번째 노드
 	return 0;
 }
 
