@@ -127,8 +127,10 @@ int initialize(headNode** h) {
 	/* headNode에 대한 메모리를 할당하여 리턴
 	 * *h = NULL인 상태 */
 	headNode* temp = (headNode*)malloc(sizeof(headNode));
-	temp->first = NULL;
-	*h = temp;
+	temp->first = NULL; //빈 메모리로 설정해준다
+	*h = temp; //만든 메모리를 연결!
+	/* singly-linked-list의 initialize와 다른 점은 headNode* -> int로 함수의 자료형이 바뀌었다
+	 * 그에 따라 리스트를 만드려면 h가 아니라 *h가 쓰여야 함 */
 
 	return 1;
 }
@@ -139,12 +141,12 @@ int freeList(headNode* h) {
 	while (p != NULL) {
 		if (p->rlink == NULL) { //마지막 노드의 메모리 해제를 위한 예외처리
 			free(p);
-			break;
+			break; //마지막 노드가 해제되면 루프 종료~
 		}
 		p = p->rlink; //p는 다음 노드로 이동
 		free(p->llink); //p의 이전 노드 메모리 해제
 	}
-	free(h);
+	free(h); //헤드노드 해제!
 
 	return 0;
 }
@@ -188,7 +190,7 @@ int insertLast(headNode* h, int key) {
 	if (h->first == NULL) {
 		node->rlink = NULL; //새 노드의 오른쪽은 NULL
 		h->first = node; //새 노드를 첫 번째 노드로 만들고
-		node->llink = h->first; //새 노드의 왼쪽은 헤드노드를 가리킴
+		node->llink = h->first; //새 노드의 왼쪽은  가리킴
 		return 0;
 	}
 
@@ -246,14 +248,14 @@ int insertFirst(headNode* h, int key) {
 	if (h->first == NULL) {
 		node->rlink = NULL; //새 노드의 오른쪽은 NULL
 		h->first = node; //새 노드를 첫 번째 노드로 만들고
-		node->llink = h->first; //새 노드의 왼쪽은 헤드노드를 가리킴
+		node->llink = h->first; //새 노드의 왼쪽은 자 가리킴
 		return 0;
 	}
 
 	node->rlink = h->first; //노드의 링크(노드 뒤 포인터)는 기존에 있던 첫 번째 노드를 가리킴
 	node->rlink->llink = node; //기존 노드의 왼쪽 링크는 새로 만든 노드를 가리킴
 	h->first = node; //첫 번째 노드로 만들고
-	node->llink = h->first; //노드의 왼쪽 링크는 헤더 가리킴
+	node->llink = h->first; //노드의 왼쪽 링크는 자기자신 가리킴
 
 	return 0;
 }
@@ -269,7 +271,7 @@ int deleteFirst(headNode* h) {
 		h->first = NULL; //리스트를 비워주고
 	}
 	else
-		p->rlink->llink = h->first; //두 번째 노드의 왼쪽 링크는 h를 가리키도록 하고
+		p->rlink->llink = h->first; //기존 두 번째 노드의 왼쪽 링크는 자기자신을 가리키도록 하고
 	free(p); //p에 있는 메모리를 해제한다.
 
 	return 0;
@@ -287,6 +289,7 @@ int invertList(headNode* h) {
 	 * prev: p가 가리키는 노드의 이전 노드
 	 * temp: 노드의 순서를 바꿀 때 매개하는 포인터
 	 * p 하나로 끝낼 수도 있겠지만 복잡해지니까 그냥 기존대로 함 */
+	
 	if (p == NULL) { //리스트가 비어있으면
 		printf("There isn't exist any list.\n"); //리스트가 없다고 출력하고
 		return -1; //종료
@@ -302,9 +305,8 @@ int invertList(headNode* h) {
 		 * temp->llink는 p노드를 가리킴(앞 노드<-중간 노드->뒤 노드)
 		 * prev = 앞 노드, temp = 중간 노드, p = 뒤 노드의 역할을 함 */
 	}
-	h->first = temp;
-	temp->llink = h->first;
-	//listhead가 재배치 전 마지막 노드를 가리킴 -> 재배치 후 첫 번째 노드
+	h->first = temp; //listhead가 재배치 전 마지막 노드를 가리킴 -> 재배치 후 첫 번째 노드
+	temp->llink = h->first; //첫 번째 노드가 된 temp의 llink는 자기자
 
 	return 0;
 }
@@ -326,7 +328,7 @@ int insertNode(headNode* h, int key) {
 	//예외사항
 	if (p == NULL) { //리스트가 비어있을 때
 		node->rlink = NULL; //노드의 오른쪽 링크(노드 뒤 포인터)는 NULL을 가리킴(첫 번째 노드니까)
-		node->llink = h->first; //노드의 왼쪽 링크는 헤드 노드를 가리킴
+		node->llink = h->first; //노드의 왼쪽 링크는 스스로를 가리킴
 		h->first = node; //헤드 노드는 새로 만든 노드를 가리킴
 		return 0;
 	}
@@ -389,7 +391,7 @@ int deleteNode(headNode* h, int key) {
 					return 0;
 				}
 				h->first = p->rlink; //h->first가 두 번째 노드(p->rlink)를 가리키도록 한 다음에
-				p->rlink->llink = h->first; //두 번째 노드의 왼쪽 링크는 h를 가리키도록 하고
+				p->rlink->llink = h->first; //두 번째 노드의 왼쪽 링크는 스스로를 가리키도록 하고
 				free(p); //p에 있는 메모리를 해제한다.
 				return 0;
 			}
