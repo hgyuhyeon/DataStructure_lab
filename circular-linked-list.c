@@ -196,6 +196,11 @@ int insertLast(listNode* h, int key) {
  */
 int deleteLast(listNode* h) {
 
+	if (h->rlink == h) { //리스트가 비어있을 때
+	printf("Nothing to delete.\n"); //지울 게 없음을 표시
+	return 0; //함수 종료
+	}
+
 	if (h->rlink->rlink == h) { //리스트 속 노드가 1개일 때
 		free(h->rlink); //해당 노드 해제
 		h->rlink = h; //리스트를 비워주고
@@ -231,6 +236,11 @@ int insertFirst(listNode* h, int key) {
  * list의 첫번째 노드 삭제
  */
 int deleteFirst(listNode* h) {
+
+	if (h->rlink == h) { //리스트가 비어있을 때
+	printf("Nothing to delete.\n"); //지울 게 없음을 표시
+	return 0; //함수 종료
+	}
 
 	listNode* p = h->rlink; //p를 생성해서 p가 첫 번째 노드(h->rlink)를 가리킴
 	
