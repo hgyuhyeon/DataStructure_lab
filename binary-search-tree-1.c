@@ -211,7 +211,7 @@ int deleteLeafNode(Node* head, int key)
 		return 0; //함수 종료
 	}
 
-	Node* p = head->left, * prev = head->left; //노드 서치용 포인터
+	Node* p = head->left, * prev = head; //노드 서치용 포인터
 	while (p != NULL) { //p가 마지막으로 내려올 때까지
 		if (p->key > key) { //key가 노드에 있는 값보다 작으면
 			prev = p; //prev도 1레벨 이동
