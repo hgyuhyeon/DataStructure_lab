@@ -20,7 +20,7 @@ typedef struct node {
 } Node;
 
 /* for stack */
-#define MAX_STACK_SIZE		20
+#define MAX_STACK_SIZE	20
 Node* stack[MAX_STACK_SIZE];
 int top = -1;
 
@@ -28,7 +28,7 @@ Node* pop();
 void push(Node* aNode);
 
 /* for queue */
-#define MAX_QUEUE_SIZE		20
+#define MAX_QUEUE_SIZE	20
 Node* queue[MAX_QUEUE_SIZE];
 int front = -1;
 int rear = -1;
@@ -49,8 +49,6 @@ int freeBST(Node* head); /* free all memories allocated to the tree */
 
 /* you may add your own defined functions if necessary */
 
-
-void printStack();
 
 
 
@@ -105,10 +103,6 @@ int main()
 			levelOrder(head->left);
 			break;
 
-		case 'p': case 'P':
-			printStack();
-			break;
-
 		default:
 			printf("\n       >>>>>   Concentration!!   <<<<<     \n");
 			break;
@@ -155,9 +149,9 @@ void recursiveInorder(Node* ptr)
 void iterativeInorder(Node* node)
 {
 	while (1) {
-		for (; node; node = node->left)
+		for (; node; node = node->left) //노드의 왼쪽 아래까지 가서
 			push(node); //스택 삽입
-		node = pop(); //스택 제거
+		node = pop(); //스택 제거 (왼쪽 자식 노드들에 쌓인 값 제거)
 		if (node == NULL)
 			break; //스택이 비어있으면 종료
 		printf("%d ", node->key);
@@ -170,21 +164,21 @@ void iterativeInorder(Node* node)
  */
 void levelOrder(Node* ptr)
 {
-	if (ptr == NULL) {
+	if (ptr == NULL) { //트리가 생성되어있지 않았을 때
 		printf("Empty Tree.\n");
 	}
 	enQueue(ptr); //루트노드 삽입
 	while (1) {
 		ptr = deQueue();
 		if (ptr != NULL) {
-			printf("%d ", ptr->key);
-			if (ptr->left)
-				enQueue(ptr->left);
-			if (ptr->right)
-				enQueue(ptr->right);
-		}
+			printf("%d ", ptr->key); //레벨순으로 출력
+			if (ptr->left) //왼쪽 자식 노드가 있으면
+				enQueue(ptr->left); //큐에 추가
+			if (ptr->right) //오른쪽 자식 노드가 있으면
+				enQueue(ptr->right); //큐에 추가
+		} //레벨 종료
 		else
-			break;
+			break; //마지막 레벨까지 가면 함수 종료
 	}
 }
 
@@ -386,13 +380,4 @@ void enQueue(Node* aNode)
 	}
 	else
 		queue[rear] = aNode; //증가된 rear가 위치한 자리에 문자 넣기
-}
-
-void printStack() {
-	printf("Stack : ");
-	for (int i = 0; i < MAX_STACK_SIZE; i++)
-		printf("%d  ", stack[i]->key);
-
-	printf("\n");
-
 }
