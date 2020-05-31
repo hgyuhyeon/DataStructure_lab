@@ -44,8 +44,8 @@ int insertVertex(Graph* g, int v); /* vertex insertion */
 void deleteVertex(Graph* g, int v); /* vertex deletion */
 int insertEdge(Graph* g, int u, int v); /* new edge creation between two vertices */
 void deleteEdge(Graph* g, int u, int v); /* edge removal */
-void depthFS(); /* depth firt search using stack */
-void breadthFS(); /* breadth first search using queue */
+void depthFS(Vertex* head); /* depth firt search using stack */
+void breadthFS(Graph* g); /* breadth first search using queue */
 void printGraph(Graph* g); /* printing graph with vertices and edges */
 
 
@@ -58,13 +58,13 @@ int main()
 	do {
 		printf("\n\n");
 		printf("----------------------------------------------------------------\n");
-		printf("                    Team Project - Graph                        \n");
+		printf("                    Term Project - Graph                        \n");
 		printf("----------------------------------------------------------------\n");
 		printf("                [-----[황규현][2019038071]-----]                \n");
 		printf("----------------------------------------------------------------\n");
 		printf(" Create Graph         = c                                       \n");
-		printf(" Insert Vertex        = i      Delete(Remove) Vertex        = r \n");
-		printf(" insert(make) edge    = m      Delete(sever) Edge           = s \n");
+		printf(" Insert Vertex        = v      Delete Vertex                = r \n");
+		printf(" insert edge          = e      Delete Edge                  = s \n");
 		printf(" DFS(depthFS)         = d      BFS(breadthFS)               = b \n");
 		printf(" print Graph          = p      Quit                         = q \n");
 		printf("----------------------------------------------------------------\n");
@@ -82,7 +82,7 @@ int main()
 		case 'p': case 'P':
 			printGraph(g);
 			break;
-		case 'i': case 'I':
+		case 'e': case 'E':
 			printf("Your Key = ");
 			scanf("%d", &key);
 			insertVertex(g, key);
@@ -92,22 +92,21 @@ int main()
 			scanf("%d", &key);
 			deleteVertex(g, key);
 			break;
-		case 'm': case 'M':
+		case 'v': case 'V':
 			printf("Your Key = ");
 			scanf("%d %d", &u, &v);
 			insertEdge(g, u, v);
 			break;
-
 		case 's': case 'S':
 			printf("Your Key = ");
 			scanf("%d %d", &u, &v);
 			deleteEdge(g, u, v);
 			break;
 		case 'd': case 'D':
-			depthFS(key);
+			depthFS(g->vlist->head);
 			break;
 		case 'b': case 'B':
-			breadthFS(key);
+			breadthFS(g);
 			break;
 
 		default:
@@ -144,8 +143,8 @@ void freenode(Vertex* adhead) {
 int destroyGraph(Graph* g) {
 	VertexHead* gp = g->vlist;
 	for (int i = 0; i < MAX_VERTEX; i++)
-		if ((gp + i) != NULL)
-			freenode(gp + i);
+		if ((gp + i)->head != NULL)
+			freenode((gp + i)->head);
 	free(gp);
 	g->vlist = NULL;
 	free(g);
@@ -174,6 +173,7 @@ void deleteVertex(Graph* g, int v) {
 	VertexHead* adj = g->vlist;
 	if ((adj + v)->head != NULL) {
 		freenode((adj + v)->head);
+		(adj + v)->head = NULL;
 		return;
 	}
 	printf("해당하는 정점이 없습니다.\n");
@@ -186,7 +186,7 @@ int insertEdge(Graph* g, int u, int v) {
 	VertexHead* adj = g->vlist;
 	
 	// u, v중 하나의 vertex라도 존재하지 않을 때
-	if (((adj + u) == NULL) || ((adj + v) == NULL)) {
+	if (((adj + u)->head == NULL) || ((adj + v)->head == NULL)) {
 		printf("[%d], [%d] vertexs not exist.\n", u, v);
 		return -1;
 	}
@@ -205,7 +205,7 @@ void deleteEdge(Graph* g, int u, int v) {
 	Vertex* p = (adj + u)->head, * prev = (adj + u);
 
 	// u, v중 하나의 vertex라도 존재하지 않을 때
-	if (((adj + u) == NULL) || ((adj + v) == NULL)) {
+	if (((adj + u)->head == NULL) || ((adj + v)->head == NULL)) {
 		printf("[%d], [%d] vertexs not exist.\n", u, v);
 		return;
 	}
@@ -224,13 +224,13 @@ void deleteEdge(Graph* g, int u, int v) {
 }
 
 /* DFS */
-void depthFS(Graph* g) {
-	Vertex* p = g->vlist->head;
+void depthFS(Vertex* head) {
 
-	printf("%d ", p);
-	while (p != NULL) {
+	visited[head->num] = 1;
+	printf("%d ", head->num);
+	for (Vertex* p = head; p != NULL; p->link) {
 		if (!visited[p->num])
-			depthFS(p->link);
+			depthFS(p->num);
 	}
 }
 
@@ -261,7 +261,7 @@ void printGraph(Graph* g) {
 
 	if (gp == NULL) {
 		printf("Nothing to print.\n");
-		return -1;
+		return;
 	}
 
 	for (int i = 0; i < MAX_VERTEX; i++) {
