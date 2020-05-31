@@ -125,17 +125,16 @@ Graph* createGraph(Graph* g) {
 
 	if (g != NULL)
 		destroyGraph(g);
-
-	VertexHead* h = (VertexHead *)malloc(sizeof(VertexHead) * MAX_VERTEX); //헤드노드 생성
+	g = (Graph*)malloc(sizeof(Graph));
+	g->vlist = (VertexHead *)malloc(sizeof(VertexHead) * MAX_VERTEX); //헤드노드 생성
 	for (int i = 0; i < MAX_VERTEX; i++)
-		(h + i)->head = NULL; //첫 번째 정점 NULL
-	g = h; //연결
-
+		(g->vlist + i)->head = NULL; //첫 번째 정점 NULL
+	
 	return g;
 }
 
 /* 그래프에 연결된 간선들 전부 삭제 */
-int freenode(Vertex* adhead) {
+void freenode(Vertex* adhead) {
 	if (adhead->link != NULL)
 		freenode(adhead->link);
 	free(adhead);
@@ -145,9 +144,12 @@ int freenode(Vertex* adhead) {
 int destroyGraph(Graph* g) {
 	VertexHead* gp = g->vlist;
 	for (int i = 0; i < MAX_VERTEX; i++)
-		freenode(gp + i);
+		if ((gp + i) != NULL)
+			freenode(gp + i);
 	free(gp);
 	g->vlist = NULL;
+	free(g);
+	return 0;
 }
 
 /* 정점 추가 */
@@ -172,10 +174,10 @@ void deleteVertex(Graph* g, int v) {
 	VertexHead* adj = g->vlist;
 	if ((adj + v)->head != NULL) {
 		freenode((adj + v)->head);
-		return 1;
+		return;
 	}
 	printf("해당하는 정점이 없습니다.\n");
-	return 0;
+	return;
 
 }
 
@@ -192,7 +194,7 @@ int insertEdge(Graph* g, int u, int v) {
 	// 간선의 방향: u->v
 	Vertex* node = (Vertex*)malloc(sizeof(Vertex));
 	node->num = v;
-	node->link = (adj + u);
+	node->link = (adj + u)->head;
 	(adj + u)->head = node;
 	return 0;
 }
@@ -268,7 +270,7 @@ void printGraph(Graph* g) {
 		if (p != NULL) {
 			printf("vertex [%d]", i);
 			while (p != NULL) {
-				printf(" -> %d", p->link);
+				printf(" -> %d", p->num);
 				p = p->link;
 			}
 			printf("\n");
@@ -320,6 +322,3 @@ void enQueue(Vertex* vtex) {
 	가산점 부여
 	(f) 보고서의 완성도는 좋은가?
 */
-
-//http://blog.naver.com/PostView.nhn?blogId=kdhkdh0407&logNo=120194479868
-//한양대 굇수의 예제 구현
