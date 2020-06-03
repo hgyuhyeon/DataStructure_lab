@@ -22,7 +22,7 @@ typedef struct Graph {
 } Graph;
 
 /* Array for DFS  */
-Vertex* visited[MAX_VERTEX];
+Vertex* stack[MAX_VERTEX];
 int top = -1;
 Vertex* pop();
 void push(Vertex* vtex);
@@ -44,7 +44,7 @@ int insertVertex(Graph* g, int v); /* vertex insertion */
 void deleteVertex(Graph* g, int v); /* vertex deletion */
 int insertEdge(Graph* g, int u, int v); /* new edge creation between two vertices */
 void deleteEdge(Graph* g, int u, int v); /* edge removal */
-void depthFS(Vertex* head); /* depth firt search using stack */
+void depthFS(Graph *g); /* depth firt search using stack */
 void breadthFS(Graph* g); /* breadth first search using queue */
 void printGraph(Graph* g); /* printing graph with vertices and edges */
 
@@ -103,7 +103,7 @@ int main()
 			deleteEdge(g, u, v);
 			break;
 		case 'd': case 'D':
-			depthFS(g->vlist->head);
+			depthFS(g);
 			break;
 		case 'b': case 'B':
 			breadthFS(g);
@@ -134,7 +134,7 @@ Graph* createGraph(Graph* g) {
 
 /* 그래프에 연결된 간선들 전부 삭제 */
 void freenode(Vertex* adhead) {
-	if (adhead != NULL) //adhead->link!=NULL
+	if (adhead->link != NULL) //adhead->link!=NULL
 		freenode(adhead->link);
 	free(adhead);
 }
@@ -158,12 +158,12 @@ int insertVertex(Graph* g, int v) {
 	VertexHead* adj = g->vlist;
 	if ((adj + vv)->head == NULL) {
 		Vertex* node = (Vertex*)malloc(sizeof(Vertex));
-		node->num = NULL;
+		node->num = vv; //식별자용 
 		node->link = NULL;
 		(adj + vv)->head = node;
 		return 1;
 	}
-	printf("최대 정점 개수를 초과했습니다.\n");
+	printf("Vertex already exist: %d\n", v);
 	return 0;
 }
 
@@ -171,15 +171,31 @@ int insertVertex(Graph* g, int v) {
  /* 정점 삭제 */
 void deleteVertex(Graph* g, int v) {
 	// 그래프 g에 정점 v 삭제
+	int vv = v - 1;
 	VertexHead* adj = g->vlist;
-	if ((adj + v)->head != NULL) {
-		freenode((adj + v)->head);
-		(adj + v)->head = NULL;
+	if ((adj + vv)->head != NULL) {
+		freenode((adj + vv)->head);
+		(adj + vv)->head = NULL;
+		for (int i = 0; i < MAX_VERTEX; i++) {
+			if ((adj + i)->head == NULL)
+				continue;
+			else {
+				Vertex* p = (adj + i)->head;
+				while (p != NULL) {
+					if (p->num == vv) {
+						p = p->link;
+						(adj + vv)->head = p;
+						deleteEdge(g, i + 1, v);
+						(adj + vv)->head = NULL;
+					}
+					p = p->link;
+				}
+			}
+		}
 		return;
 	}
-	printf("해당하는 정점이 없습니다.\n");
+	printf("no %d to delete.\n", v);
 	return;
-
 }
 
 /* 간선 생성 */
@@ -203,19 +219,23 @@ int insertEdge(Graph* g, int u, int v) {
 
 /* 간선 삭제 */
 void deleteEdge(Graph* g, int u, int v) {
+	int uu = u - 1, vv = v - 1; //vertex를 양의 정수만으로 표현하기 위함
 	VertexHead* adj = g->vlist;
-	Vertex* p = (adj + u)->head, * prev = (adj + u);
+	Vertex* p = (adj + uu)->head, * prev = (adj + uu)->head;
 
 	// u, v중 하나의 vertex라도 존재하지 않을 때
-	if (((adj + u)->head == NULL) || ((adj + v)->head == NULL)) {
+	if (((adj + uu)->head == NULL) || ((adj + vv)->head == NULL)) {
 		printf("[%d], [%d] vertexs not exist.\n", u, v);
 		return;
 	}
 
 	// 간선의 방향: u->v
-	while (p->link != NULL) { //p!=NULL ?s
-		if (p->num == v) {
-			prev->link = p->link;
+	while (p->link != NULL) {
+		if (p->num == vv) {
+			if (prev == p)
+				(adj + uu)->head = p->link;
+			else
+				prev->link = p->link;
 			free(p);
 			return;
 		}
@@ -225,9 +245,43 @@ void deleteEdge(Graph* g, int u, int v) {
 	printf("no edge exist: (%d, %d)", u, v);
 }
 
+/* return first index what vertex exist */
+int findfirst(VertexHead* vlist) {
+	int value = 0;
+	while (value < MAX_VERTEX) {
+		if (vlist + value != NULL)
+			break;
+		value++;
+	}
+	return value;
+}
+
 /* DFS using stack */
-void depthFS(Vertex* node) {
-	
+void depthFS(Graph *g) {
+	VertexHead* pp = g->vlist;
+	if (pp == NULL) {
+		printf("no graph exist.\n");
+		return;
+	}
+	Vertex* p = (pp + findfirst(pp));
+	int* visited = (int*)calloc(MAX_VERTEX, sizeof(int));
+
+	push(p);
+	while (top != -1) {
+		p = pop();
+		if (p != NULL) {
+			printf("%d ", (p->num) + 1);
+			visited[p->num] = 1;
+			while (p->link != NULL) {
+				p = p->link;
+				if (visited[p->num] == 0) {
+					push(p);
+					visited[p->num] = 1;
+				}
+			}
+		}
+	}
+	free(visited);
 }
 
 /* BFS using queue */
@@ -241,8 +295,9 @@ void breadthFS(Graph* g) {
 		p = deQueue();
 		if (p != NULL) {
 			printf("%d ", (p->num) + 1);
-			if (p->link != NULL)
-				enQueue(p->link);
+			p = p->link;
+			if (p != NULL)
+				enQueue(p);
 		}
 		else
 			break;
@@ -265,7 +320,7 @@ void printGraph(Graph* g) {
 
 		if (p != NULL) {
 			printf("vertex [%d]", i + 1);
-			while (p->link != NULL) {
+			while (p->num != i) {
 				printf(" -> %d", (p->num) + 1);
 				p = p->link;
 			}
@@ -276,22 +331,19 @@ void printGraph(Graph* g) {
 
 
 ///for stack
-int isEmpty() {
-
-}
 /* 스택에서 꺼내기 */
 Vertex* pop() {
 	Vertex* x;
 	if (top == -1)
 		return '\0'; //스택이 이미 비어있을 땐 null문자 반환
 	else {
-		x = visited[top--];
+		x = stack[top--];
 	}
 	return x; //끝부분이 한 칸 줄어들은 스택 반환
 }
 /* 스택에 추가하기 */
 void push(Vertex* vtex) {
-	visited[++top] = vtex; //스택에 해당 노드 값 추가
+	stack[++top] = vtex; //스택에 해당 노드 값 추가
 }
 ///
 
@@ -327,6 +379,3 @@ void enQueue(Vertex* vtex) {
 	가산점 부여
 	(f) 보고서의 완성도는 좋은가?
 */
-
-//http://blog.naver.com/PostView.nhn?blogId=kdhkdh0407&logNo=120194479868
-//한양대 굇수의 예제 구현
