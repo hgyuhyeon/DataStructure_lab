@@ -21,7 +21,7 @@ typedef struct Graph {
 	VertexHead* vlist;
 } Graph;
 
-/* Stack for DFS*/
+/* Array for DFS  */
 Vertex* visited[MAX_VERTEX];
 int top = -1;
 Vertex* pop();
@@ -82,7 +82,7 @@ int main()
 		case 'p': case 'P':
 			printGraph(g);
 			break;
-		case 'e': case 'E':
+		case 'v': case 'V':
 			printf("Your Key = ");
 			scanf("%d", &key);
 			insertVertex(g, key);
@@ -92,7 +92,7 @@ int main()
 			scanf("%d", &key);
 			deleteVertex(g, key);
 			break;
-		case 'v': case 'V':
+		case 'e': case 'E':
 			printf("Your Key = ");
 			scanf("%d %d", &u, &v);
 			insertEdge(g, u, v);
@@ -134,7 +134,7 @@ Graph* createGraph(Graph* g) {
 
 /* 그래프에 연결된 간선들 전부 삭제 */
 void freenode(Vertex* adhead) {
-	if (adhead->link != NULL)
+	if (adhead != NULL) //adhead->link!=NULL
 		freenode(adhead->link);
 	free(adhead);
 }
@@ -154,15 +154,16 @@ int destroyGraph(Graph* g) {
 /* 정점 추가 */
 int insertVertex(Graph* g, int v) {
 	// 그래프 g에 정점 v 삽입
+	int vv = v - 1; //양의 정수화
 	VertexHead* adj = g->vlist;
-	if ((adj + v)->head == NULL) {
+	if ((adj + vv)->head == NULL) {
 		Vertex* node = (Vertex*)malloc(sizeof(Vertex));
-		node->num = v;
+		node->num = NULL;
 		node->link = NULL;
-		(adj + v)->head = node;
+		(adj + vv)->head = node;
 		return 1;
 	}
-	printf("이미 생성된 정점입니다.\n");
+	printf("최대 정점 개수를 초과했습니다.\n");
 	return 0;
 }
 
@@ -184,18 +185,19 @@ void deleteVertex(Graph* g, int v) {
 /* 간선 생성 */
 int insertEdge(Graph* g, int u, int v) {
 	VertexHead* adj = g->vlist;
-	
+	int uu = u - 1, vv = v - 1; //vertex를 양의 정수만으로 표현하기 위함
+
 	// u, v중 하나의 vertex라도 존재하지 않을 때
-	if (((adj + u)->head == NULL) || ((adj + v)->head == NULL)) {
+	if (((adj + uu)->head == NULL) || ((adj + vv)->head == NULL)) {
 		printf("[%d], [%d] vertexs not exist.\n", u, v);
 		return -1;
 	}
 
 	// 간선의 방향: u->v
 	Vertex* node = (Vertex*)malloc(sizeof(Vertex));
-	node->num = v;
-	node->link = (adj + u)->head;
-	(adj + u)->head = node;
+	node->num = vv;
+	node->link = (adj + uu)->head;
+	(adj + uu)->head = node;
 	return 0;
 }
 
@@ -211,7 +213,7 @@ void deleteEdge(Graph* g, int u, int v) {
 	}
 
 	// 간선의 방향: u->v
-	while (p != NULL) {
+	while (p->link != NULL) { //p!=NULL ?s
 		if (p->num == v) {
 			prev->link = p->link;
 			free(p);
@@ -223,18 +225,12 @@ void deleteEdge(Graph* g, int u, int v) {
 	printf("no edge exist: (%d, %d)", u, v);
 }
 
-/* DFS */
-void depthFS(Vertex* head) {
-
-	visited[head->num] = 1;
-	printf("%d ", head->num);
-	for (Vertex* p = head; p != NULL; p->link) {
-		if (!visited[p->num])
-			depthFS(p->num);
-	}
+/* DFS using stack */
+void depthFS(Vertex* node) {
+	
 }
 
-/* BFS */
+/* BFS using queue */
 void breadthFS(Graph* g) {
 	Vertex* p = g->vlist->head;
 	if (g->vlist == NULL) {
@@ -244,8 +240,8 @@ void breadthFS(Graph* g) {
 	while (1) {
 		p = deQueue();
 		if (p != NULL) {
-			printf("%d ", p->num);
-			if (p->link)
+			printf("%d ", (p->num) + 1);
+			if (p->link != NULL)
 				enQueue(p->link);
 		}
 		else
@@ -268,9 +264,9 @@ void printGraph(Graph* g) {
 		p = (gp + i)->head;
 
 		if (p != NULL) {
-			printf("vertex [%d]", i);
-			while (p != NULL) {
-				printf(" -> %d", p->num);
+			printf("vertex [%d]", i + 1);
+			while (p->link != NULL) {
+				printf(" -> %d", (p->num) + 1);
 				p = p->link;
 			}
 			printf("\n");
@@ -278,22 +274,30 @@ void printGraph(Graph* g) {
 	}
 }
 
+
+///for stack
+int isEmpty() {
+
+}
 /* 스택에서 꺼내기 */
 Vertex* pop() {
 	Vertex* x;
 	if (top == -1)
-		return '\0'; //스택이 이미 비어있을 땐 NULL문자 반환
+		return '\0'; //스택이 이미 비어있을 땐 null문자 반환
 	else {
 		x = visited[top--];
 	}
 	return x; //끝부분이 한 칸 줄어들은 스택 반환
 }
-
 /* 스택에 추가하기 */
 void push(Vertex* vtex) {
 	visited[++top] = vtex; //스택에 해당 노드 값 추가
 }
+///
 
+
+/// for queue
+/* 큐에서 꺼내기 */
 Vertex* deQueue() {
 	if (front == rear) //큐가 비어있으면
 		return '\0'; //NULL 반환
@@ -302,7 +306,7 @@ Vertex* deQueue() {
 		return queue[front];
 	}
 }
-
+/* 큐에 넣기 */
 void enQueue(Vertex* vtex) {
 	rear = (rear + 1) % MAX_VERTEX; //rear의 값을 1 증가(3일 땐 0으로)
 	if (front == rear) { //큐가 꽉 차있으면
@@ -312,6 +316,7 @@ void enQueue(Vertex* vtex) {
 	else
 		queue[rear] = vtex; //증가된 rear가 위치한 자리에 문자 넣기
 }
+///
 
 /* 평가 주안점
 	(a) 프로그램이 논리적이고 체계적인가?
@@ -322,3 +327,6 @@ void enQueue(Vertex* vtex) {
 	가산점 부여
 	(f) 보고서의 완성도는 좋은가?
 */
+
+//http://blog.naver.com/PostView.nhn?blogId=kdhkdh0407&logNo=120194479868
+//한양대 굇수의 예제 구현
