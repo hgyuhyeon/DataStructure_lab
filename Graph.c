@@ -72,7 +72,7 @@ int main()
 		printf("----------------------------------------------------------------\n");
 		printf(" Create Graph         = c                                       \n");
 		printf(" Insert Vertex        = v      Delete Vertex                = r \n");
-		printf(" insert edge          = e      Delete Edge                  = s \n");
+		printf(" insert Edge          = e      Delete Edge                  = s \n");
 		printf(" DFS(depthFS)         = d      BFS(breadthFS)               = b \n");
 		printf(" print Graph          = p      Quit                         = q \n");
 		printf("----------------------------------------------------------------\n");
@@ -272,7 +272,7 @@ void deleteEdge(Graph* g, int u, int v) {
 
 	// 간선의 방향: u->v
 	// 정점 u에 존재하는 간선 v 삭제
-	while (p->link != NULL) { //마지막 노드(정점 노드)로 가기 전까지
+	while (p != NULL) { //마지막 노드(정점 노드)로 가기 전까지
 		if (p->num == vv) { //해당하는 간선을 찾으면
 			if (prev == p) //그 간선이 첫 번째에 위치할 때
 				(adj + uu)->head = p->link; //헤드노드를 두 번째 노드로 지정
@@ -438,13 +438,3 @@ void enQueue(Vertex* vtex) {
 		queue[rear] = vtex; //증가된 rear가 위치한 자리에 문자 넣기
 }
 ///
-
-/* 평가 주안점
-	(a) 프로그램이 논리적이고 체계적인가?
-	(b) Coding이 군더더기 없이 깔끔한가?
-	(c) 잘못된 입력 등에 안정적으로 동작하는가?
-	(d) 코드에 충분한 주석이 있어 설명이 잘 되어 있는가?
-	(e) 도전적인가? 의미있는 추가함수 구현의 경우 난이도에 따라 전체 총점의 10%이내에서
-	가산점 부여
-	(f) 보고서의 완성도는 좋은가?
-*/
