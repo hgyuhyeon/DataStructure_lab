@@ -1,8 +1,24 @@
+/*
+ * Graph.c
+ *
+ * Author: 황규현
+ *
+ */
 #include <stdio.h>
 #include <stdlib.h>
 #define MAX_VERTEX 20
 
-/* 그래프 구현 방식 - 인접 리스트 */
+/* 
+   1. 그래프 구현 방식 - 인접 리스트
+   
+   2. 각 정점의 입력값이 저장되는 방식
+   정점 insert를 할 때 1 입력 시 배열의 0번째 원소에 저장됨 
+    -> 입력값에서 1을 빼고 저장, 실제로 저장되는 수는 입력값보다 1이 작고
+   출력 시에는 1을 더해서 출력함
+	
+   3. DFS, BFS에서 기준 정점
+   현재 생성되어 있는 정점 중에서 가장 작은 정점을 기준으로 한다.
+*/
 
 
 /* 그래프의 정점 노드 */
@@ -51,11 +67,6 @@ void printGraph(Graph* g); /* printing graph with vertices and edges */
 /* Additional Functions */
 void freenode(Vertex* adhead); /* delete all edges that connect to Graph */
 int findfirst(VertexHead* vlist); /* return first index what vertex exist */
-
-/* 각 정점의 입력값이 저장되는 방식
-   1 입력 시 배열의 0번째 원소에 저장됨 
-    -> 입력값에서 1을 빼고 저장, 실제로 저장되는 수는 입력값보다 1이 작고
-	출력 시에는 1을 더해서 출력함 */
 
 int main()
 {
