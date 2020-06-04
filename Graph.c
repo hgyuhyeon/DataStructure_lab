@@ -72,7 +72,7 @@ int main()
 		printf("----------------------------------------------------------------\n");
 		printf(" Create Graph         = c                                       \n");
 		printf(" Insert Vertex        = v      Delete Vertex                = r \n");
-		printf(" insert Edge          = e      Delete Edge                  = s \n");
+		printf(" Insert Edge          = e      Delete Edge                  = s \n");
 		printf(" DFS(depthFS)         = d      BFS(breadthFS)               = b \n");
 		printf(" print Graph          = p      Quit                         = q \n");
 		printf("----------------------------------------------------------------\n");
