@@ -66,7 +66,7 @@ void printGraph(Graph* g); /* printing graph with vertices and edges */
 
 /* Additional Functions */
 void freenode(Vertex* adhead); /* delete all edges that connect to Graph */
-int findfirst(VertexHead* vlist); /* return first index what vertex exist */
+int findfirst(VertexHead* vlist); /* return first index where vertex exist */
 
 int main()
 {
@@ -301,7 +301,7 @@ void deleteEdge(Graph* g, int u, int v) {
 	printf("no edge exist: (%d, %d)", u, v);
 }
 
-/* return first index what vertex exist */
+/* return first index where vertex exist */
 int findfirst(VertexHead* vlist) {
 	int index = 0;
 	while (index < MAX_VERTEX) { 
