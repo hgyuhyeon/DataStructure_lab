@@ -228,7 +228,7 @@ void deleteVertex(Graph* g, int v) {
 
 /* 간선 생성 */
 int insertEdge(Graph* g, int u, int v) {
-	if (u <= 0 || u > MAX_VERTEX || v <= 0 || v > MAX_VERTEX) { //잘못된 입력 처리
+	if (u <= 0 || u > MAX_VERTEX || v <= 0 || v > MAX_VERTEX || u == v) { //잘못된 입력 처리
 		printf("Wrong input.\n");
 		return -1;
 	}
@@ -249,11 +249,14 @@ int insertEdge(Graph* g, int u, int v) {
 	node->num = vv; //해당 간선 수 지정
 	node->link = NULL; //마지막에 추가되므로 링크는 NULL
 
-
-	
 	Vertex* p = (adj + uu)->head, * prev = NULL; //리스트 순회용 포인터
 	/* 리스트의 마지막으로 순회 */
 	while (p != NULL) { //p가 끝까지 갈 때까지
+		if(p->num == node->num){ //간선이 이미 존재한다면
+		    printf("Edge exist.\n");
+		    free(node); //새로 만들었던 메모리 해제 
+		    return 0; //간선을 추가하지 않고 종료
+		}
 		prev = p; //prev는 p로 이동(노드 1칸 이동)
 		p = p->link; //p는 p다음 노드로 이동(노드 1칸 이동)
 	}
@@ -266,9 +269,9 @@ int insertEdge(Graph* g, int u, int v) {
 
 /* 간선 삭제 */
 void deleteEdge(Graph* g, int u, int v) {
-	if (u <= 0 || u > MAX_VERTEX || v <= 0 || v > MAX_VERTEX) { //잘못된 입력 처리
+	if (u <= 0 || u > MAX_VERTEX || v <= 0 || v > MAX_VERTEX || u == v) { //잘못된 입력 처리
 		printf("Wrong input.\n");
-		return;
+		return -1;
 	}
 
 	int uu = u - 1, vv = v - 1; //자연수 -> 배열의 원소 기준 정수
