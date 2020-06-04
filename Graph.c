@@ -91,22 +91,22 @@ switch (command) {
 			printGraph(g);
 			break;
 		case 'v': case 'V':
-			printf("Your Key = ");
+			printf("Vertex Number = ");
 			scanf("%d", &key);
 			insertVertex(g, key);
 			break;
 		case 'r': case 'R':
-			printf("Your Key = ");
+			printf("Vertex Number = ");
 			scanf("%d", &key);
 			deleteVertex(g, key);
 			break;
 		case 'e': case 'E':
-			printf("Your Key = ");
+			printf("Edge Number(Input ex: 1 2) = ");
 			scanf("%d %d", &u, &v);
 			insertEdge(g, u, v);
 			break;
 		case 's': case 'S':
-			printf("Your Key = ");
+			printf("Edge Number(Input ex: 1 2) = ");
 			scanf("%d %d", &u, &v);
 			deleteEdge(g, u, v);
 			break;
