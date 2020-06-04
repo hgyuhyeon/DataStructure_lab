@@ -317,10 +317,23 @@ void depthFS(Graph *g) {
 	//루트노드 
 	visited[minvertex] = 1; //가장 작은 수의 정점 방문 확인
 	printf("%d ", minvertex + 1); //해당 정점 출력
-	push(p); //minvertex에 해당하는 인접 리스트의 첫 번째 push
+	push(p); //minvertex에 해당하는 인접 리스트 push
 	p = (pp + p->num)->head; //p의 값을 첫 번째 인접 노드의 헤드로 수정
 
 	while (top != -1) { //스택이 비어있지 않는 동안
+		p = pop(); //더 찾아볼 인접 정점이 없으면 pop
+
+		/* 스택 예외처리 = pop했더니 p가 가장 위에 위치한 노드 */
+		if (p == (pp + minvertex)->head) {
+			while (p != NULL)
+				if (visited[p->num] == 0) { //방문하지 않은 인접 정점이 있다면
+					push(p); //다시 push
+					break;
+				}
+				else
+					p = p->link;
+		}
+
 		while (p != NULL) { //해당 정점의 인접 정점 끝까지
 			if (visited[p->num] == 0) { //방문하지 않은 노드를 찾으면
 				visited[p->num] = 1; //방문 처리
@@ -331,7 +344,6 @@ void depthFS(Graph *g) {
 			else //이미 방문한 노드라면
 				p = p->link; //다음 인접 정점으로 이동
 		}
-		p = pop(); //더 찾아볼 인접 정점이 없으면 pop
 	}
 	free(visited); //방문 판별 배열 해제
 }
