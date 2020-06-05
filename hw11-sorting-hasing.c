@@ -257,20 +257,20 @@ int shellSort(int *a)
 
 	printArray(a);
 
-	for (h = MAX_ARRAY_SIZE/2; h > 0; h /= 2)
+	for (h = MAX_ARRAY_SIZE/2; h > 0; h /= 2) //h(=간격)가 0이 될 때까지 2로 나눈다
 	{
-		for (i = 0; i < h; i++)
+		for (i = 0; i < h; i++) //배열의 인덱스를 하나씩 체크하며
 		{
-			for(j = i + h; j < MAX_ARRAY_SIZE; j += h)
-			{
-				v = a[j];
-				k = j;
+			for(j = i + h; j < MAX_ARRAY_SIZE; j += h) 
+			{ //인덱스 + 간격을 시작으로 j값이 배열 크기를 넘어갈 때까지 간격만큼 더해준다
+				v = a[j]; //배열의 해당값을 v(매개변수)에 저장
+				k = j; //해당값의 인덱스를 k에 저장
 				while (k > h-1 && a[k-h] > v)
-				{
-					a[k] = a[k-h];
-					k -= h;
+				{ //k가 간격을 유지하면서 배열 내 v값(a[j])이 들어갈 위치를 찾음
+					a[k] = a[k-h]; //동일한 간격에 있는 값들을 1칸씩 뒤로 밀음
+					k -= h; //간격만큼 점프
 				}
-				a[k] = v;
+				a[k] = v; //미리 저장해둔 v를 해당 자리에 insert
 			}
 		}
 	}
