@@ -231,7 +231,7 @@ int bubbleSort(int *a)
 
 	for(i = 0; i < MAX_ARRAY_SIZE; i++) //배열의 모든 원소 탐색
 	{
-		for (j = 0; j < MAX_ARRAY_SIZE; j++) //배열의 모든 원소 탐색
+		for (j = 1; j < MAX_ARRAY_SIZE; j++) //배열의 모든 원소 탐색
 		{
 			if (a[j-1] > a[j]) //기준값(j)보다 앞의 값이 더 크다면
 			{
@@ -294,7 +294,7 @@ int quickSort(int *a, int n) //처음 호출 시 n = MAX_ARRAY_SIZE
 		while(1)
 		{
 			while(a[++i] < v);
-			while(a[--j] > v);
+			while(a[--j] > v); //i와 j를 v에 가까워지도록 숫자를 증가시키면서
 
 			if (i >= j) break;
 			t = a[i];
