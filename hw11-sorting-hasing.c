@@ -159,7 +159,6 @@ void printArray(int *a)
 	printf("\n");
 }
 
-/* 선택 정렬 */
 int selectionSort(int *a)
 {
 	int min; //최소값
@@ -192,7 +191,6 @@ int selectionSort(int *a)
 	return 0;
 }
 
-/* 삽입 정렬 */
 int insertionSort(int *a)
 {
 	int i, j, t;
@@ -282,14 +280,14 @@ int shellSort(int *a)
 	return 0;
 }
 
-int quickSort(int *a, int n)
+int quickSort(int *a, int n) //처음 호출 시 n = MAX_ARRAY_SIZE
 {
 	int v, t;
 	int i, j;
 
-	if (n > 1)
+	if (n > 1) //
 	{
-		v = a[n-1];
+		v = a[n-1]; //n의 왼쪽 원소들 중 최대 인덱스
 		i = -1;
 		j = n - 1;
 
@@ -301,11 +299,11 @@ int quickSort(int *a, int n)
 			if (i >= j) break;
 			t = a[i];
 			a[i] = a[j];
-			a[j] = t;
+			a[j] = t; //swap
 		}
 		t = a[i];
 		a[i] = a[n-1];
-		a[n-1] = t;
+		a[n-1] = t; //swap
 
 		quickSort(a, i);
 		quickSort(a+i+1, n-i-1);
@@ -383,6 +381,3 @@ int search(int *ht, int key)
 	}
 	return index;
 }
-
-
-
