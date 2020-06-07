@@ -285,28 +285,31 @@ int quickSort(int *a, int n) //처음 호출 시 n = MAX_ARRAY_SIZE
 	int v, t;
 	int i, j;
 
-	if (n > 1) //
+	if (n > 1) //리스트의 숫자가 1 이상일때
 	{
-		v = a[n-1]; //n의 왼쪽 원소들 중 최대 인덱스
-		i = -1;
-		j = n - 1;
+		v = a[n-1]; //배열의 가장 오른쪽
+		i = -1; //가장 왼쪽
+		j = n - 1; //가장 오른쪽
 
-		while(1)
+		while(1) //v보다 작거나 큰 수를 
 		{
 			while(a[++i] < v);
-			while(a[--j] > v); //i와 j를 v에 가까워지도록 숫자를 증가시키면서
+			while(a[--j] > v); 
+			//i와 j를 v에 가까워지도록 숫자를 증가시키면서 v보다 작은지, 큰 지 체크한다
 
-			if (i >= j) break;
+			if (i >= j) break; //i보다 j의 값이 크면 중지(모든 리스트 체크)
 			t = a[i];
 			a[i] = a[j];
-			a[j] = t; //swap
+			a[j] = t; //상단의 while 조건에 맞지 않는 원소들끼리는 swap
 		}
 		t = a[i];
 		a[i] = a[n-1];
-		a[n-1] = t; //swap
+		a[n-1] = t; 
+		/* 기존 v자리에 있던 원소는 마지막으로 지정된 t자리에 swap한다. 
+		   그 자리가 해당 v원소의 자리기 때문이다. */
 
-		quickSort(a, i);
-		quickSort(a+i+1, n-i-1);
+		quickSort(a, i); //v원소의 왼쪽 리스트끼리 정렬하는 순환 함수 호출
+		quickSort(a+i+1, n-i-1); //v원소의 오른쪽 리스트끼리 정렬하는 순환 함수 
 	}
 
 
