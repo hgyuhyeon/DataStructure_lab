@@ -129,7 +129,7 @@ int initialize(int** a)
 		temp = (int*)malloc(sizeof(int) * MAX_ARRAY_SIZE);
 		*a = temp;  /* 할당된 메모리의 주소를 복사 --> main에서 배열을 control 할수 있도록 함*/
 	} else
-		temp = *a; //NULL이 아니면 temp포인터는 생성되어있는 기존의 array 메모리를 가리키ㅣㅁ
+		temp = *a; //NULL이 아니면 temp포인터는 생성되어있는 기존의 array 메모리를 가리킴
 
 	/* 랜덤값을 배열의 값으로 저장 */
 	for(int i = 0; i < MAX_ARRAY_SIZE; i++)
@@ -163,7 +163,7 @@ int selectionSort(int *a)
 {
 	int min; //최소값
 	int minindex; //최소값이 저장된 인덱스
-	int i, j;
+	int i, j; //for
 
 	printf("Selection Sort: \n");
 	printf("----------------------------------------------------------------\n");
