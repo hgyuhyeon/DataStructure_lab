@@ -65,7 +65,7 @@ void breadthFS(Graph* g); /* breadth first search using queue */
 void printGraph(Graph* g); /* printing graph with vertices and edges */
 
 /* Additional Functions */
-void freenode(Vertex* adhead); /* delete all edges that connect to Graph */
+void freenode(Vertex* adhead); /* delete all edges that connect to Vertex */
 int findfirst(VertexHead* vlist); /* return first index where vertex exist */
 
 int main()
