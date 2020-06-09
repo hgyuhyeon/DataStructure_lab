@@ -316,13 +316,13 @@ int quickSort(int *a, int n) //처음 호출 시 n = MAX_ARRAY_SIZE
 	return 0;
 }
 
-int hashCode(int key) {
-   return key % MAX_HASH_TABLE_SIZE;
+int hashCode(int key) { //해시 함수
+   return key % MAX_HASH_TABLE_SIZE; //제산 함수를 사용한다
 }
 
 int hashing(int *a, int **ht)
 {
-	int *hashtable = NULL;
+	int *hashtable = NULL; //해시 테이블 생성
 
 	/* hash table이 NULL인 경우 메모리 할당 */
 	if(*ht == NULL) {
@@ -330,41 +330,41 @@ int hashing(int *a, int **ht)
 		*ht = hashtable;  /* 할당된 메모리의 주소를 복사 --> main에서 배열을 control 할수 있도록 함*/
 	} else {
 		hashtable = *ht;	/* hash table이 NULL이 아닌경우, table 재활용, reset to -1 */
-	}
+	} //해시 테이블 생성
 
 	for(int i = 0; i < MAX_HASH_TABLE_SIZE; i++)
-		hashtable[i] = -1;
+		hashtable[i] = -1; //해시 테이블의 값 초기화
 
 	/*
 	for(int i = 0; i < MAX_HASH_TABLE_SIZE; i++)
-		printf("hashtable[%d] = %d\n", i, hashtable[i]);
+		printf("hashtable[%d] = %d\n", i, hashtable[i]); //각 해시테이블의 초기값 print
 	*/
 
 	int key = -1;
 	int hashcode = -1;
 	int index = -1;
-	for (int i = 0; i < MAX_ARRAY_SIZE; i++)
+	for (int i = 0; i < MAX_ARRAY_SIZE; i++) //배열의 모든 원소 해싱
 	{
-		key = a[i];
-		hashcode = hashCode(key);
+		key = a[i]; //key에 배열의 원래 값을 넣고 
+		hashcode = hashCode(key); //hashCode함수를 이용하여 버킷 주소를 얻는다
 		/*
 		printf("key = %d, hashcode = %d, hashtable[%d]=%d\n", key, hashcode, hashcode, hashtable[hashcode]);
-		*/
-		if (hashtable[hashcode] == -1)
+		*/ //원래 값, 버킷 주소, 해시테이블의 해당 버킷 주소 디버깅
+		if (hashtable[hashcode] == -1) //테이블의 버킷이 비어있으면
 		{
-			hashtable[hashcode] = key;
-		} else 	{
+			hashtable[hashcode] = key; //해당 자리에 값을 넣고
+		} else 	{ //버킷에 값이 존재하면
 
-			index = hashcode;
+			index = hashcode; //index 변수에 값을 일시적으로 넣고 
 
-			while(hashtable[index] != -1)
+			while(hashtable[index] != -1) //해당 자리가 비워질 때까지
 			{
 				index = (++index) % MAX_HASH_TABLE_SIZE;
 				/*
-				printf("index = %d\n", index);
+				printf("index = %d\n", index); //바뀔 때마다 index 값 디버깅
 				*/
-			}
-			hashtable[index] = key;
+			} //index의 값을 제산 함수 형태를 이용하여 수정한다(선형 조사법 형태)
+			hashtable[index] = key; //테이블의 빈 자리에 해당 값 저장
 		}
 	}
 
@@ -373,14 +373,14 @@ int hashing(int *a, int **ht)
 
 int search(int *ht, int key)
 {
-	int index = hashCode(key);
+	int index = hashCode(key); //해당 key의 해시값을 index에 넣고
 
-	if(ht[index] == key)
-		return index;
+	if(ht[index] == key) //만약 테이블의 버킷위치와 값이 같으면
+		return index; //바로 리턴하고 함수 종료
 
-	while(ht[++index] != key)
+	while(ht[++index] != key) //그렇지 않을 때(저장된 위치를 찾아야 할 때)
 	{
-		index = index % MAX_HASH_TABLE_SIZE;
+		index = index % MAX_HASH_TABLE_SIZE; //선형 조사 방식을 이용하여 인덱스 값 증가
 	}
-	return index;
+	return index; //while문이 종료되면 값을 찾은것이므로 
 }
