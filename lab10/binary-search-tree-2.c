@@ -258,7 +258,9 @@ int deleteNode(Node* head, int key)
 				//1. 양쪽 자식 노드가 있을 때
 				if ((p->left != NULL) && p->right != NULL) {
 					/* pp = 타겟 노드의 오른쪽 자식 노드들을 가리키는 포인터 생성
-					 * prev = pp의 이전 노드를 가리키도록 함.*/
+					 * prev = pp의 이전 노드를 가리키도록 함.
+                                         * 타겟 노드의 오른쪽 자식 노드 중 최소값을 타겟 노드 위치로 옮기고
+                                         * 해당 최소값 노드(리프 노드)를 삭제하는 방식 */
 					Node* pp = p->right;
 					prev = p;
 					while (pp->left != NULL) {//최소값이 나올 때까지
